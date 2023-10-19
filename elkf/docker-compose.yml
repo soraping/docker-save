@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+
+  elasticsearch:
+    image: elasticsearch:7.17.7
+    container_name: elasticsearch
+    networks:
+      - es_net
+    # restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    privileged: true
+    volumes:
+      - /Users/caoping/www/docker/elkf/es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /Users/caoping/www/docker/elkf/es/logs:/usr/share/elasticsearch/logs
+      - /Users/caoping/www/docker/elkf/es/data:/usr/share/elasticsearch/data
+      - /Users/caoping/www/docker/elkf/es/plugins:/usr/share/elasticsearch/plugins
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - LANG=en_US.UTF-8
+
+  cerebro:
+    image: lmenezes/cerebro:0.9.4
+    container_name: cerebro
+    # restart: always
+    ports:
+      - "9801:9000"
+    networks:
+      - es_net
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - elasticsearch
+    command:
+      - -Dhosts.0.host=http://es:9200
+
+
+  kibana:
+    image: kibana:7.17.7
+    container_name: kibana
+    networks:
+      - es_net
+    # restart: always
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch:es
+    volumes:
+      - /Users/caoping/www/docker/elkf/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es:9200
+      - ELASTICSEARCH_URL=http://es:9200
+      - TZ=Asia/Shanghai
+
+  logstash:
+    image: logstash:7.17.7
+    container_name: logstash
+    # restart: always
+    networks:
+      - es_net
+    ports:
+      - 5044:5044
+      - 9600:9600
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+      - "LS_JAVA_OPTS=-Xms512m -Xmx512m"
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch:es
+    volumes:
+      - /Users/caoping/www/docker/elkf/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - /Users/caoping/www/docker/elkf/logstash/pipeline:/usr/share/logstash/pipeline
+
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.17.7
+    container_name: filebeat
+    # restart: always
+    depends_on:
+      - logstash
+      - elasticsearch
+    privileged: true
+    volumes:
+      - /Users/caoping/www/docker/elkf/filebeat/data:/usr/share/filebeat/data
+      - /Users/caoping/www/docker/elkf/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /Users/caoping/www/docker/elkf/filebeat/logs:/usr/share/filebeat/logs
+      # 宿主机日志文件目录
+      - /Users/caoping/www/php-site/zhongshu/runtime/log/202310:/usr/share/filebeat/collect
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=en_US.UTF-8
+
+
+networks:
+  es_net:
+    driver: bridge

@@ -1,0 +1,35 @@
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+processors:
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+
+# output.elasticsearch:
+# hosts: '${ELASTICSEARCH_HOSTS:elasticsearch:9200}'
+# hosts: "${ELASTICSEARCH_HOSTS:es:9200}"
+# username: "${ELASTICSEARCH_USERNAME:}"
+# password: "${ELASTICSEARCH_PASSWORD:}"
+
+filebeat.inputs:
+  - type: log	#类型
+    enabled: true
+    encoding: UTF-8	#日志编码
+    # 设置参数，在logstash中接受
+    fields:
+      app_name: derui
+
+    paths:
+      - /usr/share/filebeat/collect/*.log	# 容器内的目录，映射宿主机日志目录
+    multiline.pattern: '^\[ [log|error] \]'	##匹配以“time”开始的行
+    multiline.negate: true	#未匹配到的在下面
+    multiline.match: after
+    multiline.max_lines: 10000	#一个多行消息最大行数
+    multiline.timeout: 10s	#超时时间
+    tail_files: true	#文件尾开始监控文件新增内容，把新增的每一行文件作为一个事件依次发送，而不是从文件开始处重新发送所有内容
+    fields_under_root: true	#果该选项设置为true，则新增fields成为顶级目录，而不是将其放在fields目录下
+
+output.logstash:
+  hosts: ["192.168.1.8:5044"]	#logstash地址
