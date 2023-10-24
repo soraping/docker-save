@@ -13,10 +13,10 @@ services:
       - 9300:9300
     privileged: true
     volumes:
-      - /Users/caoping/www/docker/elkf/es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - /Users/caoping/www/docker/elkf/es/logs:/usr/share/elasticsearch/logs
-      - /Users/caoping/www/docker/elkf/es/data:/usr/share/elasticsearch/data
-      - /Users/caoping/www/docker/elkf/es/plugins:/usr/share/elasticsearch/plugins
+      - /Users/caoping/www/docker/docker-file/elkf/es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /Users/caoping/www/docker/docker-file/elkf/es/logs:/usr/share/elasticsearch/logs
+      - /Users/caoping/www/docker/docker-file/elkf/es/data:/usr/share/elasticsearch/data
+      - /Users/caoping/www/docker/docker-file/elkf/es/plugins:/usr/share/elasticsearch/plugins
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.type=single-node
@@ -27,14 +27,15 @@ services:
     container_name: cerebro
     # restart: always
     ports:
-      - "9801:9000"
+      - "9000:9000"
     networks:
       - es_net
-    restart: always
     environment:
       - TZ=Asia/Shanghai
     depends_on:
       - elasticsearch
+    links:
+      - elasticsearch:es
     command:
       - -Dhosts.0.host=http://es:9200
 
@@ -52,7 +53,7 @@ services:
     links:
       - elasticsearch:es
     volumes:
-      - /Users/caoping/www/docker/elkf/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - /Users/caoping/www/docker/docker-file/elkf/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
     environment:
       - ELASTICSEARCH_HOSTS=http://es:9200
       - ELASTICSEARCH_URL=http://es:9200
@@ -76,8 +77,8 @@ services:
     links:
       - elasticsearch:es
     volumes:
-      - /Users/caoping/www/docker/elkf/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
-      - /Users/caoping/www/docker/elkf/logstash/pipeline:/usr/share/logstash/pipeline
+      - /Users/caoping/www/docker/docker-file/elkf/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - /Users/caoping/www/docker/docker-file/elkf/logstash/pipeline:/usr/share/logstash/pipeline
 
 
   filebeat:
@@ -89,9 +90,9 @@ services:
       - elasticsearch
     privileged: true
     volumes:
-      - /Users/caoping/www/docker/elkf/filebeat/data:/usr/share/filebeat/data
-      - /Users/caoping/www/docker/elkf/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
-      - /Users/caoping/www/docker/elkf/filebeat/logs:/usr/share/filebeat/logs
+      - /Users/caoping/www/docker/docker-file/elkf/filebeat/data:/usr/share/filebeat/data
+      - /Users/caoping/www/docker/docker-file/elkf/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /Users/caoping/www/docker/docker-file/elkf/filebeat/logs:/usr/share/filebeat/logs
       # 宿主机日志文件目录
       - /Users/caoping/www/php-site/zhongshu/runtime/log/202310:/usr/share/filebeat/collect
     environment:

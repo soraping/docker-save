@@ -1,5 +1,6 @@
 server.host: "0.0.0.0"
 server.shutdownTimeout: "5s"
+server.publicBaseUrl: "http://127.0.0.1:5601"
 elasticsearch.hosts: [ "http://es:9200" ]
 monitoring.ui.container.elasticsearch.enabled: true
 elasticsearch.username: "kibana_system"
