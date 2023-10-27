@@ -4,6 +4,7 @@ services:
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
+    privileged: true
     networks:
       - kafka_net
     # restart: true
@@ -18,6 +19,7 @@ services:
   kafka:
     image: wurstmeister/kafka
     container_name: kafka01
+    privileged: true
     networks:
       - kafka_net
     # restart: true
@@ -42,6 +44,7 @@ services:
   kafkaui:
     image: freakchicken/kafka-ui-lite
     container_name: kafkaui
+    privileged: true
     networks:
       - kafka_net
     # restart: true

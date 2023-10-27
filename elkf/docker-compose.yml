@@ -43,6 +43,7 @@ services:
   kibana:
     image: kibana:7.17.7
     container_name: kibana
+    privileged: true
     networks:
       - es_net
     # restart: always
@@ -65,6 +66,7 @@ services:
     # restart: always
     networks:
       - es_net
+      - kafka_kafka_net
     ports:
       - 5044:5044
       - 9600:9600
@@ -103,3 +105,5 @@ services:
 networks:
   es_net:
     driver: bridge
+  kafka_kafka_net:
+    external: true

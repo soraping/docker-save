@@ -125,7 +125,7 @@ services:
 
   nacos:
     # restart: always
-    image: nacos/nacos-server
+    image: nacos/nacos-server:v2.2.2
     container_name: nacos
     ports:
       - 8848:8848
@@ -133,6 +133,8 @@ services:
       - 9849:9849
 
     privileged: true
+    depends_on:
+      - mysql
     networks:
       - tools
     environment:
@@ -161,16 +163,16 @@ services:
       JVM_MMS: 64m
 
       # 存储
-      SPRING_DATASOURCE_PLATFORM: mysql
-      MYSQL_SERVICE_HOST: mysql
-      MYSQL_SERVICE_PORT: 3306
-      MYSQL_SERVICE_USER: root
-      MYSQL_SERVICE_PASSWORD: 123456
-      MYSQL_SERVICE_DB_NAME: nacos_config
+      # SPRING_DATASOURCE_PLATFORM: mysql
+      # MYSQL_SERVICE_HOST: mysql
+      # MYSQL_SERVICE_PORT: 3306
+      # MYSQL_SERVICE_USER: root
+      # MYSQL_SERVICE_PASSWORD: 123456
+      # MYSQL_SERVICE_DB_NAME: nacos_config
     volumes:
-      - /Users/caoping/www/mydata/nacos/logs:/home/nacos/logs
-      - /Users/caoping/www/mydata/nacos/init.d:/home/nacos/init.d
-      # - /Users/caoping/www/mydata/nacos/data:/home/nacos/data
+      - /Users/caoping/www/docker/docker-file/nacos/logs:/home/nacos/logs
+      - /Users/caoping/www/docker/docker-file/nacos/init.d:/home/nacos/init.d
+      - /Users/caoping/www/docker/docker-file/nacos/data:/home/nacos/data
 
 
 
