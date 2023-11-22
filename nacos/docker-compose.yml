@@ -133,8 +133,8 @@ services:
       - 9849:9849
 
     privileged: true
-    depends_on:
-      - mysql
+    # depends_on:
+    #   - mysql
     networks:
       - tools
     environment:
