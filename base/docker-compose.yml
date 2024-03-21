@@ -77,9 +77,8 @@ services:
 
 
   jenkins:
-    # jenkins/jenkins:2.346.3-lts-jdk8
-    image: jenkins/jenkins:lts-jdk8
-    # restart: always
+    image: jenkins/jenkins:2.440.2
+    #restart: always
     networks:
       - tools
     privileged: true
@@ -93,7 +92,7 @@ services:
       - /Users/caoping/www/docker/docker-file/base/jenkins:/var/jenkins_home
       # 传入maven包jdk包
       - /Users/caoping/bin/apache-maven-3.6.3:/usr/local/maven
-      - /usr/bin/java:/etc/local/java
+      - /Users/caoping/bin/jdk1.8.0_381:/usr/local/java
       - /usr/bin/git:/usr/local/git
       # 在容器中使用宿主机的docker
       - /usr/bin/docker:/usr/bin/docker
