@@ -77,7 +77,8 @@ services:
 
 
   jenkins:
-    image: jenkins/jenkins:2.346.3-lts-jdk8
+    # jenkins/jenkins:2.346.3-lts-jdk8
+    image: jenkins/jenkins:lts-jdk8
     # restart: always
     networks:
       - tools
@@ -88,10 +89,11 @@ services:
       - 50000:50000
     volumes:
       - /etc/localtime:/etc/localtime
-      - /home/docker-data/jenkins:/var/jenkins_home
+      # chown -R 1000 
+      - /Users/caoping/www/docker/docker-file/base/jenkins:/var/jenkins_home
       # 传入maven包jdk包
-      - /home/maven/apache-maven-3.6.3:/usr/local/maven
-      - /opt/java/jdk1.8.0_381:/etc/local/java
+      - /Users/caoping/bin/apache-maven-3.6.3:/usr/local/maven
+      - /usr/bin/java:/etc/local/java
       - /usr/bin/git:/usr/local/git
       # 在容器中使用宿主机的docker
       - /usr/bin/docker:/usr/bin/docker
