@@ -102,6 +102,8 @@ services:
     environment:
       - TZ=Asia/Shanghai
 
+    # command: /bin/bash -c "mkdir /dockerData; chown -R 1000 /dockerData"
+
 
   registry:
     image: registry
