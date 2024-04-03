@@ -8,10 +8,10 @@ services:
     privileged: true
     container_name: nginx
     ports:
-      - 8080:80
+      - 5173:5173
       - 8443:443
     volumes:
-      - /Users/caoping/www/docker/docker-file/base/nginx/html:/usr/share/nginx/html
+      - /Users/caoping/www/docker/docker-file/base/nginx/html:/etc/nginx/html
       - /Users/caoping/www/docker/docker-file/base/nginx/www:/var/www
       - /Users/caoping/www/docker/docker-file/base/nginx/nginx.conf/:/etc/nginx/nginx.conf
       - /Users/caoping/www/docker/docker-file/base/nginx/cert:/etc/nginx/cert

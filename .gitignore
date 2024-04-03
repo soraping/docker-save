@@ -5,3 +5,4 @@ logs
 data
 .DS_Store
 jenkins
+base/nginx
