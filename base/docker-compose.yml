@@ -22,6 +22,17 @@ services:
       - TZ=Asia/Shanghai
 
 
+  tools:
+    image: ghcr.io/corentinth/it-tools:latest
+    container_name: tools
+    privileged: true
+    # restart: always
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - 8001:80 
+
+
   mysql8:
     image: mysql:latest
     # restart: always
