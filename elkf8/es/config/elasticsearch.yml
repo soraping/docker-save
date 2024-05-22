@@ -1,0 +1,17 @@
+network.host: 0.0.0.0
+# 跨域
+http.host: 0.0.0.0
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+
+#根据自己的配置内容进行修改
+cluster.name: "docker-cluster"
+
+#****此处是否开启密码校验模式 true是开启密码校验模式，否则不用密码校验
+xpack.security.enabled: true
+#****启动会报错not all primary shards of [.geoip_databases] index are active at 则将该配置改为false
+ingest.geoip.downloader.enabled: false
+#添加这个配置以后在kibana中才会显示联机状态，否则会显示脱机状态
+xpack.monitoring.collection.enabled: true
+
+

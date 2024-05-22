@@ -1,0 +1,17 @@
+server.host: "0.0.0.0"
+server.shutdownTimeout: "5s"
+server.publicBaseUrl: "http://127.0.0.1:5601"
+elasticsearch.hosts: [ "http://es:9200" ]
+monitoring.ui.container.elasticsearch.enabled: true
+# elasticsearch.username: "elastic"
+# elasticsearch.password: "UVhz+d6lG8ig1hdv+srH"
+i18n.locale: "zh-CN"
+
+#此处为新生成的kibana账号和密码
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "3AWfI_RCk7ti9WdFLjJi"
+
+xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.hosts: ["http://es:9200"]
+xpack.monitoring.kibana.collection.enabled: true
+xpack.monitoring.kibana.collection.interval: 10000

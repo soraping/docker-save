@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+
+  elasticsearch:
+    image: elasticsearch:8.13.4
+    container_name: elasticsearch
+    networks:
+      - es8_net
+    # restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    privileged: true
+    volumes:
+      - /Users/caoping/www/docker/docker-file/elkf8/es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /Users/caoping/www/docker/docker-file/elkf8/es/logs:/usr/share/elasticsearch/logs
+      - /Users/caoping/www/docker/docker-file/elkf8/es/data:/usr/share/elasticsearch/data
+      - /Users/caoping/www/docker/docker-file/elkf8/es/plugins:/usr/share/elasticsearch/plugins
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - LANG=en_US.UTF-8
+
+
+  kibana:
+    image: kibana:8.13.4
+    container_name: kibana
+    privileged: true
+    networks:
+      - es8_net
+    # restart: always
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch:es
+    volumes:
+      - /Users/caoping/www/docker/docker-file/elkf8/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - /Users/caoping/www/docker/docker-file/elkf8/kibana/logs:/usr/share/kibana/logs
+      - /Users/caoping/www/docker/docker-file/elkf8/kibana/data:/usr/share/kibana/data
+      - /Users/caoping/www/docker/docker-file/elkf8/kibana/plugins:/usr/share/kibana/plugins
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es:9200
+      - ELASTICSEARCH_URL=http://es:9200
+      - TZ=Asia/Shanghai
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.13.4
+    container_name: logstash
+    # restart: always
+    networks:
+      - es8_net
+      - kafka_kafka_net
+    ports:
+      - 5044:5044
+      - 9600:9600
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+      - "LS_JAVA_OPTS=-Xms512m -Xmx512m"
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch:es
+    volumes:
+      - /Users/caoping/www/docker/docker-file/elkf8/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - /Users/caoping/www/docker/docker-file/elkf8/logstash/pipeline:/usr/share/logstash/pipeline
+
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.13.4
+    container_name: filebeat
+    # restart: always
+    depends_on:
+      - logstash
+      - elasticsearch
+    privileged: true
+    volumes:
+      - /Users/caoping/www/docker/docker-file/elkf8/filebeat/data:/usr/share/filebeat/data
+      - /Users/caoping/www/docker/docker-file/elkf8/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /Users/caoping/www/docker/docker-file/elkf8/filebeat/logs:/usr/share/filebeat/logs
+      # 宿主机日志文件目录
+      # - /Users/caoping/www/php-site/zhongshu/runtime/log/202310:/usr/share/filebeat/collect
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=en_US.UTF-8
+
+
+networks:
+  es8_net:
+    driver: bridge
+  kafka_kafka_net:
+    external: true
