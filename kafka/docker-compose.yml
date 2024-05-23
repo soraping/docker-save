@@ -1,22 +1,29 @@
 version: '3.8'
 services:
   
-  zookeeper:
+  zookeeper1:
     image: wurstmeister/zookeeper
-    container_name: zookeeper
+    container_name: zookeeper01
     privileged: true
     networks:
       - kafka_net
     # restart: true
     ports:
       - "2181:2181"
+      - "8084:8080"
     volumes:
       - "/etc/localtime:/etc/localtime"
       - /Users/caoping/www/docker/docker-file/kafka/zookeeper/data:/data
       - /Users/caoping/www/docker/docker-file/kafka/zookeeper/datalog:/datalog
       - /Users/caoping/www/docker/docker-file/kafka/zookeeper/conf:/conf
-  
-  kafka:
+
+    # environment:
+    #   ZOO_MY_ID: 1
+    #   ZOO_SERVERS: server.1=zookeeper01:2888:3888;2181 server.2=zookeeper02:2888:3888;2181 server.3=zookeeper03:2888:3888;2181
+
+
+
+  kafka1:
     image: wurstmeister/kafka
     container_name: kafka01
     privileged: true
@@ -30,16 +37,47 @@ services:
     links:
       - zookeeper:zk
     environment:
-      # KAFKA_BROKER_ID: 1
+      # KAFKA_BROKER_ID: 1     # 集群用
       KAFKA_HEAP_OPTS: "-Xmx256M -Xms128M"
+      KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ADVERTISED_HOST_NAME: 192.168.1.4
+      # 宿主机IP
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.1.4:9092
-      KAFKA_ZOOKEEPER_CONNECT: zk:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      # zookeeper 集群，因为都在同一个内网，所以可以通过容器名称获取到容器的ip
+      KAFKA_ZOOKEEPER_CONNECT: zk:2181
     volumes:
       - "/etc/localtime:/etc/localtime"
       - /var/run/docker.sock:/var/run/docker.sock
       - /Users/caoping/www/docker/docker-file/kafka/kafka/logs:/kafka/logs
+
+  # kafka2:
+  #   image: wurstmeister/kafka
+  #   container_name: kafka02
+  #   privileged: true
+  #   networks:
+  #     - kafka_net
+  #   # restart: true
+  #   ports:
+  #     - "9093:9092"
+  #   depends_on:
+  #     - zookeeper
+  #   links:
+  #     - zookeeper:zk
+  #   environment:
+  #     KAFKA_BROKER_ID: 2     # 集群用
+  #     KAFKA_HEAP_OPTS: "-Xmx256M -Xms128M"
+  #     KAFKA_ADVERTISED_PORT: 9093
+  #     KAFKA_ADVERTISED_HOST_NAME: 192.168.1.4
+  #     # 宿主机IP
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.1.4:9093
+  #     KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9093
+  #     # zookeeper 集群，因为都在同一个内网，所以可以通过容器名称获取到容器的ip
+  #     KAFKA_ZOOKEEPER_CONNECT: zk:2181
+  #   volumes:
+  #     - "/etc/localtime:/etc/localtime"
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /Users/caoping/www/docker/docker-file/kafka/kafka/logs:/kafka/logs
 
   kafkaui:
     image: freakchicken/kafka-ui-lite
