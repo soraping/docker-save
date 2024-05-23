@@ -5,7 +5,7 @@ http.cors.enabled: true
 http.cors.allow-origin: "*"
 
 #根据自己的配置内容进行修改
-cluster.name: "docker-cluster"
+cluster.name: "es-cluster1"
 
 #****此处是否开启密码校验模式 true是开启密码校验模式，否则不用密码校验
 xpack.security.enabled: true

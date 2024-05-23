@@ -34,3 +34,12 @@ apm_system：这个用户用于APM Server与Elasticsearch集群之间的通信�
 remote_monitoring_user：这个用户用于监控Elasticsearch集群。它具有remote_monitoring_agent和remote_monitoring_collector内置角色。
 ingest_manager：这个用户用于运行和管理Elasticsearch的数据摄取和管理功能。它具有执行数据摄取和管理任务所需的最小权限。
 ```
+
+#### plugins
+
+- ik 中文分词
+
+```
+https://github.com/infinilabs/analysis-ik
+```
+

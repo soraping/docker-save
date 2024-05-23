@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   elasticsearch:
-    image: elasticsearch:8.13.4
+    image: elasticsearch:8.12.2
     container_name: elasticsearch
     networks:
       - es8_net
@@ -24,7 +24,7 @@ services:
 
 
   kibana:
-    image: kibana:8.13.4
+    image: kibana:8.12.2
     container_name: kibana
     privileged: true
     networks:
