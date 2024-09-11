@@ -151,8 +151,8 @@ services:
       - 5672:5672
       - 25672:25672
     volumes:
-      - /home/docker-data/rabbitmq:/var/lib/rabbitmq
-      - /home/docker-data/logs/rabbitmq:/var/log/rabbitmq
+      - /Users/caoping/www/docker/docker-file/base/rabbitmq/data:/var/lib/rabbitmq
+      - /Users/caoping/www/docker/docker-file/base/rabbitmq/logs:/var/log/rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin123

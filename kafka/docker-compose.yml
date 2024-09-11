@@ -1,9 +1,9 @@
 version: '3.8'
 services:
   
-  zookeeper1:
+  zookeeper:
     image: wurstmeister/zookeeper
-    container_name: zookeeper01
+    container_name: zookeeper
     privileged: true
     networks:
       - kafka_net
@@ -23,9 +23,9 @@ services:
 
 
 
-  kafka1:
+  kafka:
     image: wurstmeister/kafka
-    container_name: kafka01
+    container_name: kafka
     privileged: true
     networks:
       - kafka_net
@@ -42,7 +42,7 @@ services:
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ADVERTISED_HOST_NAME: 192.168.1.4
       # 宿主机IP
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.1.4:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.31.249:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       # zookeeper 集群，因为都在同一个内网，所以可以通过容器名称获取到容器的ip
       KAFKA_ZOOKEEPER_CONNECT: zk:2181
@@ -80,16 +80,21 @@ services:
   #     - /Users/caoping/www/docker/docker-file/kafka/kafka/logs:/kafka/logs
 
   kafkaui:
-    image: freakchicken/kafka-ui-lite
+    image: wdkang/kafka-console-ui
     container_name: kafkaui
     privileged: true
+    user: root
     networks:
       - kafka_net
     # restart: true
     depends_on:
       - kafka
     ports:
-      - "8889:8889"
+      - "7766:7766"
+    volumes:
+      - /Users/caoping/www/docker/docker-file/kafka/kafka-ui/data:/app/data
+      - /Users/caoping/www/docker/docker-file/kafka/kafka-ui/logs:/app/log
+    
     
 networks:
   kafka_net:

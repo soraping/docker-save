@@ -47,7 +47,7 @@ services:
       - TZ=Asia/Shanghai
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:8.13.4
+    image: logstash:8.12.2
     container_name: logstash
     # restart: always
     networks:
@@ -70,7 +70,7 @@ services:
 
 
   filebeat:
-    image: docker.elastic.co/beats/filebeat:8.13.4
+    image: docker.elastic.co/beats/filebeat:8.12.2
     container_name: filebeat
     # restart: always
     depends_on:
