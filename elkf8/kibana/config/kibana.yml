@@ -7,9 +7,9 @@ monitoring.ui.container.elasticsearch.enabled: true
 # elasticsearch.password: "UVhz+d6lG8ig1hdv+srH"
 i18n.locale: "zh-CN"
 
-#此处为新生成的kibana账号和密码
-elasticsearch.username: "kibana_system"
-elasticsearch.password: "123456"
+#此处为es账号密码
+elasticsearch.username: "elastic"
+elasticsearch.password: "elastic123"
 
 xpack.monitoring.enabled: true
 xpack.monitoring.elasticsearch.hosts: ["http://es:9200"]

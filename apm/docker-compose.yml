@@ -31,7 +31,7 @@ services:
       - STORAGE_TYPE=elasticsearch
       - ES_HOSTS=elasticsearch:9200
       - ES_USERNAME=elastic
-      - ES_PASSWORD=123456
+      - ES_PASSWORD=elastic123
       - JAVA_OPTS=-Dlogging.level.zipkin2=DEBUG
     
   skywalking-oap:
@@ -45,11 +45,11 @@ services:
       - 11800:11800
       - 12800:12800
     environment:
-      SW_STORAGE: elasticsearch7
+      SW_STORAGE: elasticsearch
       SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
+      SW_ES_USER: elastic
+      SW_ES_PASSWORD: elastic123 # tips: 密码不能为纯数字，启动会出问题
       TZ: Asia/Shanghai
-    volumes:
-      - ./skywalking/config/alarm-settings.yml:/skywalking/config/alarm-settings.yml
   
   skywalking-ui:
     image: apache/skywalking-ui:latest
@@ -60,9 +60,9 @@ services:
     depends_on:
       - skywalking-oap
     ports:
-      - 8080:8080
+      - 8049:8080
     environment:
-      SW_OAP_ADDRESS: oap:12800
+      SW_OAP_ADDRESS: http://skywalking-oap:12800
       TZ: Asia/Shanghai
 
 networks:
