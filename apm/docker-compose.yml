@@ -8,7 +8,6 @@ services:
     ports:
       - '9410:9410'
       - '9411:9411'
-    network_mode: host
     networks:
       - mysql_net
     environment:
@@ -27,16 +26,51 @@ services:
     ports:
       - '9410:9410'
       - '9411:9411'
-    network_mode: host
     environment:
       - TZ=Asia/Shanghai
       - STORAGE_TYPE=elasticsearch
       - ES_HOSTS=elasticsearch:9200
+      - ES_USERNAME=elastic
+      - ES_PASSWORD=123456
+      - JAVA_OPTS=-Dlogging.level.zipkin2=DEBUG
     
+  skywalking-oap:
+    image: apache/skywalking-oap-server:latest
+    container_name: skywalking-oap
+    privileged: true
+    networks:
+      - skywalking
+      - es_net
+    ports:
+      - 11800:11800
+      - 12800:12800
+    environment:
+      SW_STORAGE: elasticsearch7
+      SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
+      TZ: Asia/Shanghai
+    volumes:
+      - ./skywalking/config/alarm-settings.yml:/skywalking/config/alarm-settings.yml
+  
+  skywalking-ui:
+    image: apache/skywalking-ui:latest
+    container_name: skywalking-ui
+    privileged: true
+    networks:
+      - skywalking
+    depends_on:
+      - skywalking-oap
+    ports:
+      - 8080:8080
+    environment:
+      SW_OAP_ADDRESS: oap:12800
+      TZ: Asia/Shanghai
+
 networks:
   mysql_net:
     name: app_net
     external: true
   es_net:
-    name: elkf_es_net
+    name: elkf8_es8_net
     external: true
+  skywalking:
+    driver: bridge
