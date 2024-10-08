@@ -35,7 +35,7 @@ services:
       - JAVA_OPTS=-Dlogging.level.zipkin2=DEBUG
     
   skywalking-oap:
-    image: apache/skywalking-oap-server:9.7.0
+    image: apache/skywalking-oap-server:9.5.0
     container_name: skywalking-oap
     privileged: true
     networks:
@@ -52,7 +52,7 @@ services:
       TZ: Asia/Shanghai
   
   skywalking-ui:
-    image: apache/skywalking-ui:9.7.0
+    image: apache/skywalking-ui:9.5.0
     container_name: skywalking-ui
     privileged: true
     networks:
