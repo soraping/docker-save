@@ -27,6 +27,38 @@ services:
     environment:
       - TZ=Asia/Shanghai
 
+  skywalking-oap:
+    image: apache/skywalking-oap-server:9.5.0
+    container_name: skywalking-oap
+    privileged: true
+    networks:
+      - skywalking
+      - es_net
+    ports:
+      - 11800:11800
+      - 12800:12800
+    environment:
+      SW_STORAGE: elasticsearch
+      SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
+      SW_ES_USER: elastic
+      SW_ES_PASSWORD: elastic123 # tips: 密码不能为纯数字，启动会出问题
+      TZ: Asia/Shanghai
+  
+  skywalking-ui:
+    image: apache/skywalking-ui:9.5.0
+    container_name: skywalking-ui
+    privileged: true
+    networks:
+      - skywalking
+    depends_on:
+      - skywalking-oap
+    ports:
+      - 8049:8080
+    environment:
+      SW_OAP_ADDRESS: http://skywalking-oap:12800
+      TZ: Asia/Shanghai
+
+
   seata: 
     image: seataio/seata-server:1.6.1
     container_name: seata
@@ -87,3 +119,5 @@ networks:
   nacos_net:
     name: base_tools
     external: true
+  skywalking:
+    driver: bridge
