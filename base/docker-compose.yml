@@ -101,36 +101,66 @@ services:
 
     command: redis-server /etc/redis/redis.conf
 
-
-  jenkins:
-    image: jenkins/jenkins:2.440.2
-    #restart: always
-    networks:
-      - tools
-    privileged: true
-    container_name: jenkins
-    ports:
-      - 8000:8080
-      - 50000:50000
-    volumes:
-      - /etc/localtime:/etc/localtime
-      # chown -R 1000 
-      - /Users/caoping/www/docker/docker-file/base/jenkins:/var/jenkins_home
-      # 传入maven包jdk包
-      - /Users/caoping/bin/apache-maven-3.6.3:/usr/local/maven
-      - /Users/caoping/bin/jdk1.8.0_381:/usr/local/java
-      - /usr/bin/git:/usr/local/git
-      # 在容器中使用宿主机的docker
-      - /usr/bin/docker:/usr/bin/docker
-      # 注意要在jenkins容器中开放权限
-      - /var/run/docker.sock:/var/run/docker.sock
-
-    environment:
-      - TZ=Asia/Shanghai
-
     # command: /bin/bash -c "mkdir /dockerData; chown -R 1000 /dockerData"
 
 
+  nacos:
+    # restart: always
+    image: nacos/nacos-server:v2.3.2
+    container_name: nacos
+    ports:
+      - 8848:8848
+      - 9848:9848
+      - 9849:9849
+
+    privileged: true
+    depends_on:
+      - mysql57
+    networks:
+      - tools
+    environment:
+      # 集群配置
+      # MODE: cluster
+      # NACOS_SERVERS: nacos-server01:8848 nacos-server02:8848 nacos-server03:8848
+
+      # 单机
+      MODE: standalone
+
+      # 副本
+      NACOS_REPLICAS: 1
+      PREFER_HOST_MODE: hostname
+
+      # 个人安全配置
+      NACOS_AUTH_ENABLE: "true"
+      NACOS_AUTH_TOKEN_EXPIRE_SECONDS: 18000
+      NACOS_AUTH_TOKEN: NStQdHM3WCU3RVYlMjRZdG04aUolMkM3JTJDQnhyUCU1RXFMJTIxaiUyOCUyM1JZ
+      NACOS_AUTH_IDENTITY_KEY: tianji
+      NACOS_AUTH_IDENTITY_VALUE: tianji
+
+      # 账号密码
+      NACOS_AUTH_SYSTEM_TYPE: nacos
+
+      # 虚拟机设置
+      JVM_XMS: 128m
+      JVM_XMX: 128m
+      JVM_MS: 64m
+      JVM_MMS: 64m
+
+      # 存储
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: 123456
+      MYSQL_SERVICE_DB_NAME: nacos_config
+      MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=10000&socketTimeout=30000&autoReconnect=true&useSSL=false
+    volumes:
+      - /Users/caoping/www/docker/docker-file/base/nacos/logs:/home/nacos/logs
+      - /Users/caoping/www/docker/docker-file/base/nacos/init.d:/home/nacos/init.d
+      - /Users/caoping/www/docker/docker-file/base/nacos/data:/home/nacos/data
+
+
+  # docker-registry
   registry:
     image: registry
     # restart: always
@@ -147,28 +177,9 @@ services:
       - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
       - REGISTRY_STORAGE_DELETE_ENABLED=true
     volumes:
-      - /home/docker-data/registry/config.yml:/etc/docker/registry/config.yml
-      - /home/docker-data/registry/auth:/auth
-      - /home/docker-data/registry/data:/var/lib/registry
-
-
-  rabbitmq:
-    image: rabbitmq:management
-    # restart: always
-    networks:
-      - tools
-    privileged: true
-    container_name: rabbitmq
-    ports:
-      - 15672:15672
-      - 5672:5672
-      - 25672:25672
-    volumes:
-      - /Users/caoping/www/docker/docker-file/base/rabbitmq/data:/var/lib/rabbitmq
-      - /Users/caoping/www/docker/docker-file/base/rabbitmq/logs:/var/log/rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin123
+      - /Users/caoping/www/docker/docker-file/base/registry/config.yml:/etc/docker/registry/config.yml
+      - /Users/caoping/www/docker/docker-file/base/registry/auth:/auth
+      - /Users/caoping/www/docker/docker-file/base/registry/data:/var/lib/registry
 
   mongo:
     image: mongo:4.2

@@ -27,9 +27,9 @@ seata:
     type: nacos
     nacos:
       # nacos ip地址
-      server-addr: 127.0.0.1:8848
+      server-addr: nacos:8848
       group: SEATA_GROUP
-      namespace: prod
+      namespace: da52f965-b3db-4120-9677-dd4339edea79
       username: nacos
       password: nacos
       ##if use MSE Nacos with auth, mutex with username/password attribute
@@ -43,29 +43,32 @@ seata:
     nacos:
       application: seata-server
       # nacos ip地址
-      server-addr: 127.0.0.1:8848
+      server-addr: nacos:8848
       group: SEATA_GROUP
-      namespace: prod
+      namespace: da52f965-b3db-4120-9677-dd4339edea79
       cluster: default
       username: nacos
       password: nacos
       ##if use MSE Nacos with auth, mutex with username/password attribute
       #access-key: ""
       #secret-key: ""
-  # store:
-  #   # support: file 、 db 、 redis
-  #   mode: file
-  #   session:
-  #     mode: file
-  #   lock:
-  #     mode: file
-  #   file:
-  #     dir: sessionStore
-  #     max-branch-session-size: 16384
-  #     max-global-session-size: 512
-  #     file-write-buffer-cache-size: 16384
-  #     session-reload-read-size: 100
-  #     flush-disk-mode: async
+  store:
+    mode: db
+    db:
+      datasource: druid
+      db-type: mysql
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/seata?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+      user: root
+      password: 123456
+      min-conn: 10
+      max-conn: 100
+      global-table: global_table
+      branch-table: branch_table
+      lock-table: lock_table
+      distributed-lock-table: distributed_lock
+      query-limit: 1000
+      max-wait: 5000
   #  server:
   #    service-port: 8091 #If not configured, the default is '${server.port} + 1000'
   security:
