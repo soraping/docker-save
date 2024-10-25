@@ -8,7 +8,7 @@ ACTION=$1
 
 
 usage() {
-    echo "Usage: $PROG_NAME {nginx|mysql|nacos}"
+    echo "Usage: $PROG_NAME {nginx|openresty|mysql|nacos}"
     exit 2
 }
 
@@ -28,6 +28,23 @@ build_nginx(){
     docker stop nginx > /dev/null
     docker rm nginx > /dev/null
     echo "nginx 数据卷创建完成"
+}
+
+build_openresty(){
+    BASE_DATA_PATH=$BASE_DIR/base/openresty
+    echo "start openresty"
+    mkdir -p $BASE_DATA_PATH/nginx
+    mkdir -p $BASE_DATA_PATH/nginx/logs
+    mkdir -p $BASE_DATA_PATH/nginx/cert
+    mkdir -p $BASE_DATA_PATH/nginx/www
+    mkdir -p $BASE_DATA_PATH/nginx/lua
+    docker run -d --name openresty -p 7001:80 openresty/openresty > /dev/null
+    docker cp openresty:/usr/local/openresty/nginx/conf $BASE_DATA_PATH/nginx/nginx.conf > /dev/null
+    docker cp openresty:/etc/nginx/conf.d $BASE_DATA_PATH/nginx/conf.d > /dev/null
+    docker cp openresty:/usr/local/openresty/nginx/html $BASE_DATA_PATH/nginx/html > /dev/null
+    docker stop openresty > /dev/null
+    docker rm openresty > /dev/null
+    echo "openresty 数据卷创建完成"
 }
 
 
@@ -83,6 +100,9 @@ build_jenkins(){
 case "$ACTION" in
     nginx)
         build_nginx
+    ;;
+    openresty)
+        build_openresty
     ;;
     *)
         usage
