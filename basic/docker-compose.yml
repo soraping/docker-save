@@ -58,6 +58,27 @@ services:
       SW_OAP_ADDRESS: http://skywalking-oap:12800
       TZ: Asia/Shanghai
 
+  hertzbeat:
+    image: apache/hertzbeat:v1.6.1
+    container_name: hertzbeat
+    volumes:
+      - /Users/caoping/www/docker/docker-file/basic/hertzbeat/data:/opt/hertzbeat/data
+      - /Users/caoping/www/docker/docker-file/basic/hertzbeat/logs:/opt/hertzbeat/logs
+      - /Users/caoping/www/docker/docker-file/basic/hertzbeat/application.yml:/opt/hertzbeat/config/application.yml
+      - /Users/caoping/www/docker/docker-file/basic/hertzbeat/sureness.yml:/opt/hertzbeat/config/sureness.yml
+    ports:
+      - "1157:1157"
+      - "1158:1158"
+  
+  
+  hertzbeat-collector:
+    image: apache/hertzbeat-collector:v1.6.1
+    container_name: hertzbeat-collector
+    environment:
+      IDENTITY: custom-collector-name
+      MANAGER_HOST: 127.0.0.1
+      MANAGER_PORT: 1158
+
 
   seata: 
     image: seataio/seata-server:1.6.1

@@ -177,6 +177,31 @@ services:
       - /Users/caoping/www/docker/docker-file/base/nacos/data:/home/nacos/data
 
 
+  rnacos:
+    image: qingpan/rnacos:v0.6.4
+    container_name: rnacos
+    network_mode: "host"
+    # restart: always
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "10848:10848"
+    volumes:
+      - /home/docker/nacos/io:/io:rw
+    environment:
+      - TZ=Asia/Shanghai
+      - RNACOS_INIT_ADMIN_USERNAME=nacos
+      - RNACOS_INIT_ADMIN_PASSWORD=nacos
+      - RNACOS_HTTP_PORT=8848
+
+      # # 集群配置
+      # # 主节点为1
+      # - RNACOS_RAFT_NODE_ID=1
+      # - RNACOS_RAFT_NODE_ADDR=127.0.0.1:9848
+      # # 从节点需要配置需要加入的主节点地址
+      # - RNACOS_RAFT_JOIN_ADDR=r-nacos-master:9848
+
+
   # docker-registry
   registry:
     image: registry
