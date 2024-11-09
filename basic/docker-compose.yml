@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
 
   jenkins:
@@ -106,6 +104,17 @@ services:
     ports:
       - "7091:7091"
       - "8091:8091"
+
+  sentinel:
+    image: bladex/sentinel-dashboard:1.8.8
+    container_name: sentinel
+    ports:
+      - "8858:8858"
+    environment:
+      TZ: Asia/Shanghai
+      JAVA_OPTS: "-Dserver.port=8858 -Dcsp.sentinel.dashboard.server=localhost:8858 -Dproject.name=sentinel-dashboard"
+    volumes:
+      - /Users/caoping/www/docker/docker-file/basic/sentinel/logs:/root/logs
 
 
   xxljob:
