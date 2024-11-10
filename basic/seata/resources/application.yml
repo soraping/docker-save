@@ -58,24 +58,24 @@ seata:
       cluster: default
       username: nacos
       password: nacos
-  store:
-    # support: file 、 db 、 redis 、 raft
-    mode: db
-    db:
-      datasource: druid
-      db-type: mysql
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://mysql57:3306/ry-seata?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
-      user: root
-      password: 123456
-      min-conn: 5
-      max-conn: 100
-      global-table: global_table
-      branch-table: branch_table
-      lock-table: lock_table
-      distributed-lock-table: distributed_lock
-      query-limit: 100
-      max-wait: 5000
+  # store:
+  #   # support: file 、 db 、 redis 、 raft
+  #   mode: db
+  #   db:
+  #     datasource: druid
+  #     db-type: mysql
+  #     driver-class-name: com.mysql.cj.jdbc.Driver
+  #     url: jdbc:mysql://mysql8:8306/ry-seata?useUnicode=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+  #     user: root
+  #     password: 123456
+  #     min-conn: 10
+  #     max-conn: 100
+  #     global-table: global_table
+  #     branch-table: branch_table
+  #     lock-table: lock_table
+  #     distributed-lock-table: distributed_lock
+  #     query-limit: 1000
+  #     max-wait: 5000
   #  server:
   #    service-port: 8091 #If not configured, the default is '${server.port} + 1000'
   security:

@@ -79,7 +79,7 @@ services:
 
 
   seata: 
-    image: seataio/seata-server:1.6.1
+    image: seataio/seata-server:1.7.1
     container_name: seata
     networks:
       - mysql_net

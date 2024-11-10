@@ -62,12 +62,13 @@ services:
 
 
   mysql8:
-    image: mysql:latest
+    image: mysql:8.0.36
     # restart: always
     networks:
       - tools
+      - external_net
     privileged: true
-    container_name: mysql
+    container_name: mysql8
     ports:
       - 8306:3306
     volumes:
