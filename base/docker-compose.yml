@@ -65,8 +65,9 @@ services:
     image: mysql:8.0.36
     # restart: always
     networks:
-      - tools
-      - external_net
+      external_net:
+        ipv4_address: 172.19.0.4
+      tools: {}
     privileged: true
     container_name: mysql8
     ports:
@@ -85,8 +86,9 @@ services:
     image: mysql:5.7.30
     # restart: always
     networks:
-      - tools
-      - external_net
+      external_net:
+        ipv4_address: 172.19.0.3
+      tools: {}
     privileged: true
     container_name: mysql
     ports:
@@ -105,8 +107,9 @@ services:
     image: redis:latest
     # restart: always
     networks:
-      - tools
-      - external_net
+      external_net:
+        ipv4_address: 172.19.0.5
+      tools: {}
     privileged: true
     container_name: redis
     ports:
@@ -241,3 +244,9 @@ networks:
   external_net:
     name: app_net
     external: true
+    # 指定网络固定 ip
+    # https://blog.csdn.net/a772304419/article/details/140876125
+    ipam:
+      config:
+        - subnet: 172.19.0.0/24
+          gateway: 172.19.0.1
