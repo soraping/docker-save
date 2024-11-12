@@ -3,10 +3,11 @@ version: '3.8'
 services:
 
   rabbitmq:
-    image: rabbitmq:management
+    image: rabbitmq:3.13.7-management
     # restart: always
     networks:
-      - tools
+      mq_net:
+        ipv4_address: 172.25.0.2
     privileged: true
     container_name: rabbitmq
     ports:
@@ -16,6 +17,18 @@ services:
     volumes:
       - /Users/caoping/www/docker/docker-file/mq/rabbitmq/data:/var/lib/rabbitmq
       - /Users/caoping/www/docker/docker-file/mq/rabbitmq/logs:/var/log/rabbitmq
+      - /Users/caoping/www/docker/docker-file/mq/rabbitmq/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - /Users/caoping/www/docker/docker-file/mq/rabbitmq/config/10-default-guest-user.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf
+      - /Users/caoping/www/docker/docker-file/mq/rabbitmq/plugins/rabbitmq_delayed_message_exchange-3.13.0.ez:/opt/rabbitmq/plugins/rabbitmq_delayed_message_exchange-3.13.0.ez
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin123
+
+networks:
+  mq_net:
+    driver: bridge
+    name: mq_net
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+          gateway: 172.25.0.1
