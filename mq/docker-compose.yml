@@ -21,6 +21,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin123
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
 
 networks:
   mq_net:
