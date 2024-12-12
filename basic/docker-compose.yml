@@ -122,7 +122,8 @@ services:
     container_name: xxljob
     privileged: true
     networks:
-      - mysql_net
+      mysql_net:
+        ipv4_address: 172.19.0.5
     ports:
       - 9003:8080
     volumes:
@@ -141,7 +142,7 @@ services:
 
 
   snailjob:
-    image: opensnail/snail-job:1.1.2
+    image: opensnail/snail-job:1.2.0
     container_name: snailjob
     privileged: true
     networks:
@@ -152,6 +153,7 @@ services:
     volumes:
       - /Users/caoping/www/docker/docker-file/basic/sanil-job/logs:/data/log
     environment:
+      JAVA_OPTS: "-Xmx512m"
       PARAMS: "--spring.datasource.username=root 
                   --spring.datasource.password=123456  
                   --spring.datasource.url=jdbc:mysql://172.19.0.4:3306/snail_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai 
