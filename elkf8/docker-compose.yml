@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   elasticsearch:
@@ -86,6 +84,23 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - LANG=en_US.UTF-8
+
+
+  vector:
+    image: timberio/vector:latest-alpine
+    container_name: vector
+    volumes:
+      - /Users/caoping/www/docker/docker-file/elkf8/vector/config/:/etc/vector/
+      - /etc/localtime:/etc/localtime
+      # 将日志目录映射到容器内
+      - /Users/caoping/www/java-site/rouyi/plus/RuoYi-Vue-Plus/logs:/logs/ruoyi/logs
+    ports:
+      - 9598:9598  # metrics信息暴露端口，后面会讲到
+      - 8686:8686
+#    environment:  # 开启DEBUG模式，这里不开启
+#      VECTOR_LOG: debug
+    entrypoint: "vector --config /etc/vector/config.yaml"
+    # restart: always
 
 
 networks:

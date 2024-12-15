@@ -1,0 +1,24 @@
+sources:
+  my_source:   
+    type: "file"
+    include:
+      - /logs/ruoyi/logs/**/*.log
+
+transforms:
+  my_transform:
+    type: remap
+    inputs:
+      - my_source
+    source: |
+      . = parse_regex!(.message, r'^(?P<logtime>\d+-\d+-\d+ \d+:\d+:\d+) \[(?P<classname>\w+)\] (?P<level>[A-Z]+)  (?P<classrun>[\w,\.]+) - (?P<msg>.*)$')
+  
+sinks:
+  my_print:
+    type: "console"
+    inputs: ["my_transform"]
+    encoding:
+      codec: "json" 
+
+api:
+  enabled: true
+  address: "0.0.0.0:8686"
