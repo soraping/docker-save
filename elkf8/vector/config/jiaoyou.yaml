@@ -28,7 +28,6 @@ transforms:
       if .parse_result != null {
         .traceId = .parse_result.traceId
         .message = .parse_result.msg
-        del(.content)
       }
       del(.content)
       del(.parse_result)
