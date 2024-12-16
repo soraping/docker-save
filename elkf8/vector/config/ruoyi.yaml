@@ -19,6 +19,6 @@ sinks:
     encoding:
       codec: "json" 
 
-api:
-  enabled: true
-  address: "0.0.0.0:8686"
+# api:
+#   enabled: true
+#   address: "0.0.0.0:8686"

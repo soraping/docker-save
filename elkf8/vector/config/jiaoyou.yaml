@@ -1,0 +1,46 @@
+sources:
+  jiaoyou_source:
+    type: "file"
+    include:
+      - /logs/jiaoyou/logs/**/*.log
+
+transforms:
+  jiaoyou_json:
+    type: remap
+    inputs:
+      - jiaoyou_source
+    source: |
+      . = parse_regex!(.message, r'^\[(?P<logtime>.*)\]\[(?P<level>\w+)\] (?P<content>.*)$')
+  
+  jiaoyou_filter:
+    type: filter
+    inputs:
+      - jiaoyou_json
+    condition: |
+      .level != "sql"
+  
+  jiaoyou_result:
+    type: remap
+    inputs:
+      - jiaoyou_filter
+    source: |
+      .parse_result = parse_regex!(.content, r'^\[traceId(?P<traceId>.*)\] (?P<msg>.*)$')
+      if .parse_result != null {
+        .traceId = .parse_result.traceId
+        .message = .parse_result.msg
+        del(.content)
+      }
+      del(.content)
+      del(.parse_result)
+
+  
+sinks:
+  jiaoyou_print:
+    type: "console"
+    inputs: ["jiaoyou_result"]
+    encoding:
+      codec: "json" 
+
+# api:
+#   enabled: true
+#   address: "0.0.0.0:8686"

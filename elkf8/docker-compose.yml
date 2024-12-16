@@ -94,12 +94,13 @@ services:
       - /etc/localtime:/etc/localtime
       # 将日志目录映射到容器内
       - /Users/caoping/www/java-site/rouyi/plus/RuoYi-Vue-Plus/logs:/logs/ruoyi/logs
+      - /Users/caoping/www/php-site/jiaoyou/jiaoyou-api/runtime/api/log:/logs/jiaoyou/logs
     ports:
       - 9598:9598  # metrics信息暴露端口，后面会讲到
       - 8686:8686
 #    environment:  # 开启DEBUG模式，这里不开启
 #      VECTOR_LOG: debug
-    entrypoint: "vector --config /etc/vector/config.yaml"
+    entrypoint: "vector --config /etc/vector/*.yaml"
     # restart: always
 
 
