@@ -10,7 +10,11 @@ transforms:
     inputs:
       - jiaoyou_source
     source: |
-      . = parse_regex!(.message, r'^\[(?P<logtime>.*)\]\[(?P<level>\w+)\] (?P<content>.*)$')
+      . = parse_regex!(.message, r'^\[(?P<logDay>\d+-\d+-\d+)T(?P<logTime>\d+:\d+:\d+)\+\d+:\d+\]\[(?P<level>\w+)\] (?P<content>.*)$')
+      .timestamp = .logDay + " " + .logTime
+      .appName = "jiaoyou"
+      del(.logDay)
+      del(.logTime)
   
   jiaoyou_filter:
     type: filter
@@ -24,10 +28,15 @@ transforms:
     inputs:
       - jiaoyou_filter
     source: |
-      .parse_result = parse_regex!(.content, r'^\[traceId(?P<traceId>.*)\] (?P<msg>.*)$')
+      .parse_result = parse_regex!(.content, r'^\[traceId:(?P<traceId>.*)\] \[ip:(?P<host>.*)\] \[uri:(?P<uri>.*)\] \[method:(?P<method>\w+)\] \[userId:(?P<userId>.*)\] \[username:(?P<username>.*)\] (?P<msg>.*)$')
       if .parse_result != null {
         .traceId = .parse_result.traceId
         .message = .parse_result.msg
+        .host = .parse_result.host
+        .uri = .parse_result.uri
+        .method = .parse_result.method
+        .userId = .parse_result.userId
+        .username = .parse_result.username
       }
       del(.content)
       del(.parse_result)
@@ -38,7 +47,25 @@ sinks:
     type: "console"
     inputs: ["jiaoyou_result"]
     encoding:
-      codec: "json" 
+      codec: "json"
+  jiaoyou_vlogs:
+    inputs:
+      - jiaoyou_result
+    type: elasticsearch
+    endpoints:
+      - http://192.168.1.6:9428/insert/elasticsearch/
+    mode: data_stream
+    auth:
+      strategy: "basic"
+      user: "admin"
+      password: "admin123"
+    api_version: v8
+    healthcheck:
+      enabled: false
+    query:
+      _msg_field: message
+      _time_field: timestamp
+      _stream_fields: traceId,level,appName
 
 # api:
 #   enabled: true
