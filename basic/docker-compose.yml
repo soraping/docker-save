@@ -62,12 +62,12 @@ services:
     volumes:
       - /Users/caoping/www/docker/docker-file/basic/hertzbeat/data:/opt/hertzbeat/data
       - /Users/caoping/www/docker/docker-file/basic/hertzbeat/logs:/opt/hertzbeat/logs
+      - /Users/caoping/www/docker/docker-file/basic/hertzbeat/ext-lib:/opt/hertzbeat/ext-lib
       - /Users/caoping/www/docker/docker-file/basic/hertzbeat/application.yml:/opt/hertzbeat/config/application.yml
       - /Users/caoping/www/docker/docker-file/basic/hertzbeat/sureness.yml:/opt/hertzbeat/config/sureness.yml
     ports:
       - "1157:1157"
       - "1158:1158"
-  
   
   hertzbeat-collector:
     image: apache/hertzbeat-collector:v1.6.1
@@ -76,6 +76,23 @@ services:
       IDENTITY: custom-collector-name
       MANAGER_HOST: 127.0.0.1
       MANAGER_PORT: 1158
+
+
+  vm:
+    image: victoriametrics/victoria-metrics:v1.95.1
+    container_name: vm
+    ports:
+      - "8428:8428" # VictoriaMetrics HTTP API
+      - "8429:8429" # VictoriaMetrics GraphQL
+    environment:
+      - HTTP_AUTH_USERNAME=admin
+      - HTTP_AUTH_PASSWORD=admin123
+    volumes:
+      - /Users/caoping/www/docker/docker-file/basic/victoria-metrics-data:/victoria-metrics-data
+    command:
+      - "-storageDataPath=/victoria-metrics-data"
+      - "-httpAuth.username=admin"
+      - "-httpAuth.password=admin123"
 
 
   seata: 
