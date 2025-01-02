@@ -1,23 +1,47 @@
 sources:
-  my_source:   
+  friends_source:   
     type: "file"
     include:
       - /logs/ruoyi/logs/**/*.log
 
 transforms:
-  my_transform:
+  friends_transform:
     type: remap
     inputs:
-      - my_source
+      - friends_source
     source: |
-      . = parse_regex!(.message, r'^(?P<logtime>\d+-\d+-\d+ \d+:\d+:\d+) \[(?P<classname>\w+)\] (?P<level>[A-Z]+)  (?P<classrun>[\w,\.]+) - (?P<msg>.*)$')
+      . = parse_regex!(.message, r'^(?P<logDay>\d+-\d+-\d+) (?P<logTime>\d+:\d+:\d+) \[thread:(?P<thread>.*)\] \[traceId:(?P<traceId>.*)\] \[level:(?P<level>.*)\] \[className:(?P<className>.*)\] - (?P<content>.*$)')
+      .timestamp = .logDay + " " + .logTime
+      .appName = "friends-server"
+      .level = replace(.level, " ", "")
+      del(.logDay)
+      del(.logTime)
+
   
 sinks:
-  my_print:
-    type: "console"
-    inputs: ["my_transform"]
-    encoding:
-      codec: "json" 
+  # jiaoyou_print:
+  #   type: "console"
+  #   inputs: ["my_transform"]
+  #   encoding:
+  #     codec: "json"
+  friends_vlogs:
+    inputs:
+      - friends_transform
+    type: elasticsearch
+    endpoints:
+      - http://192.168.1.6:9428/insert/elasticsearch/
+    mode: data_stream
+    auth:
+      strategy: "basic"
+      user: "admin"
+      password: "admin123"
+    api_version: v8
+    healthcheck:
+      enabled: false
+    query:
+      _msg_field: content
+      _time_field: timestamp
+      _stream_fields: appName
 
 # api:
 #   enabled: true
