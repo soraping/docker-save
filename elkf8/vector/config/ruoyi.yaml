@@ -10,7 +10,7 @@ transforms:
     inputs:
       - friends_source
     source: |
-      . = parse_regex!(.message, r'^(?P<logDay>\d+-\d+-\d+) (?P<logTime>\d+:\d+:\d+) \[thread:(?P<thread>.*)\] \[traceId:(?P<traceId>.*)\] \[level:(?P<level>.*)\] \[className:(?P<className>.*)\] - (?P<content>.*$)')
+      . = parse_regex!(.message, r'^(?P<logDay>\d+-\d+-\d+) (?P<logTime>\d+:\d+:\d+) \[thread:(?P<thread>.*)\] \[traceId:(?P<traceId>.*)\] \[ip:(?P<ip>.*)\] \[level:(?P<level>.*)\] \[className:(?P<className>.*)\] \[userId:(?P<userId>.*)\] \[username:(?P<username>.*)\] - (?P<content>.*$)')
       .timestamp = .logDay + " " + .logTime
       .appName = "friends-server"
       .level = replace(.level, " ", "")
