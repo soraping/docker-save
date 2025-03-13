@@ -134,6 +134,17 @@ services:
       - /Users/caoping/www/docker/docker-file/basic/sentinel/logs:/root/logs
 
 
+  canal:
+    image: canal/canal-server:v1.1.8
+    container_name: canal
+    ports:
+      - "11111:11111"
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - /Users/caoping/www/docker/docker-file/basic/canal/conf/:/opt/canal/conf/
+
+
   xxljob:
     image: xuxueli/xxl-job-admin:2.4.1
     container_name: xxljob

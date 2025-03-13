@@ -41,6 +41,8 @@ ingest_manager：这个用户用于运行和管理Elasticsearch的数据摄取�
 
 ```
 https://github.com/infinilabs/analysis-ik
+
+https://release.infinilabs.com/analysis-ik/stable/
 ```
 
 
