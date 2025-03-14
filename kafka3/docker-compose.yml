@@ -1,8 +1,8 @@
 version: "3.8"
 services:
   kafka1:
+    image: bitnami/kafka:3.8.1
     container_name: kafka01
-    image: 'bitnami/kafka'
     user: root
     networks:
       - kafka_net
