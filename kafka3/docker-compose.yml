@@ -28,7 +28,7 @@ services:
       # - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka11:9093,2@kafka22:9093,3@kafka33:9093
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka01:9093
       # 允许使用PLAINTEXT监听器，默认false，不建议在生产环境使用
-      - ALLOW_PLAINTEXT_LISTENER=yes
+      - ALLOW_PLAINTEXT_LISTENER=false
       # 设置broker最大内存，和初始内存
       - KAFKA_HEAP_OPTS=-Xmx512M -Xms256M
     volumes:

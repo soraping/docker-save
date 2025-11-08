@@ -145,6 +145,32 @@ services:
       - /Users/caoping/www/docker/docker-file/basic/canal/conf/:/opt/canal/conf/
 
 
+  manticore:
+    image: manticoresearch/manticore
+    container_name: manticore
+    privileged: true
+    # restart: always
+    ports:
+      - "9306:9306"
+      - "9308:9308"
+    environment:
+      EXTRA: 1
+      TZ: Asia/Shanghai
+    ulimits:
+      nproc: 65535
+      nofile:
+         soft: 65535
+         hard: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - /Users/caoping/www/docker/docker-file/basic/manticore/data:/var/lib/manticore
+      - /Users/caoping/www/docker/docker-file/basic/manticore/config/manticore.conf:/etc/manticoresearch/manticore.conf
+      - /Users/caoping/www/docker/docker-file/basic/manticore/config/manticore_users:/etc/manticoresearch/manticore_users
+      - /Users/caoping/www/docker/docker-file/basic/manticore/log:/var/log/manticore
+
+
   xxljob:
     image: xuxueli/xxl-job-admin:2.4.1
     container_name: xxljob
